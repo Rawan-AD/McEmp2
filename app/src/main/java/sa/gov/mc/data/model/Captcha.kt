@@ -1,4 +1,4 @@
-package sa.gov.mc.model
+package sa.gov.mc.data.model
 
 
 

@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
+import dagger.hilt.android.AndroidEntryPoint
 
 import sa.gov.mc.screens.chat.ChatUI
 import sa.gov.mc.screens.contacts.ContactsScreen
@@ -26,6 +27,7 @@ import sa.gov.mc.utility.BottomBar
     var bottomState by remember { mutableStateOf("Home") }
     val pagerState = rememberPagerState()
     Scaffold(
+
         modifier = Modifier
 
             .background(Gray),

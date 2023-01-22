@@ -9,7 +9,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import sa.gov.mc.EmployeeApplication
-import sa.gov.mc.model.Captcha
+import sa.gov.mc.data.model.Captcha
+import sa.gov.mc.repository.CaptchaRepository
 import sa.gov.mc.utility.AccountApi
 import sa.gov.mc.utility.AccountApiStatus
 import javax.inject.Inject
@@ -18,11 +19,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 
-class LoginViewModel @Inject constructor() : ViewModel(){
+class LoginViewModel @Inject constructor(private val captchaRepository:CaptchaRepository) : ViewModel(){
 
     private val _status=MutableLiveData<AccountApiStatus>()
     val status:LiveData<AccountApiStatus> =_status
-   private val _captchaInfo=MutableLiveData<Captcha>()
+   private var _captchaInfo=MutableLiveData<Captcha>()
     val captchaInfo:LiveData<Captcha> = _captchaInfo
     val captcha=MutableLiveData<String>()
 
@@ -36,9 +37,10 @@ class LoginViewModel @Inject constructor() : ViewModel(){
            _status.value=AccountApiStatus.LOADING
 
        try{
-           _captchaInfo.value=AccountApi.retrofitServer.getCaptcha()
+//           _captchaInfo.value=AccountApi.retrofitServer.getCaptcha()
+          val  result=captchaRepository.captchaLogin()
            _status.value=AccountApiStatus.DONE
-           Log.e("TAG", "getCaptchaInfo: "+ captchaInfo.value?.captcha)
+           Log.e("TAG", "getCaptchaInfo: "+result)
 
        }catch (e:Exception){
            _status.value=AccountApiStatus.ERROR

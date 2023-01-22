@@ -47,11 +47,11 @@ import retrofit2.Callback
 import retrofit2.Response
 import sa.gov.mc.R
 import sa.gov.mc.Screens
-import sa.gov.mc.model.Captcha
-import sa.gov.mc.model.Login
-import sa.gov.mc.model.LoginResponse
+import sa.gov.mc.data.model.Captcha
+import sa.gov.mc.data.model.Login
+import sa.gov.mc.data.model.LoginResponse
 import sa.gov.mc.network.AccountApiService
-
+import sa.gov.mc.repository.CaptchaRepository
 
 
 import sa.gov.mc.ui.theme.*
@@ -65,10 +65,9 @@ import javax.inject.Inject
 
 @Composable
 
-fun LoginScreen(navController: NavHostController, loginViewModel:LoginViewModel= hiltViewModel()) {
+fun LoginScreen (navController:NavController) {
 
 
-    val context= LocalContext.current
 Background()
     Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxSize()) {
 
@@ -84,7 +83,7 @@ Background()
                 contentScale = ContentScale.Fit
             )
 
-
+val loginViewModel:LoginViewModel= hiltViewModel()
         Spacer(Modifier.height(25.dp))
         SimpleFilledTextFieldSample(navController,loginViewModel)
 
@@ -216,7 +215,7 @@ fun SimpleFilledTextFieldSample(navController:NavController,loginViewModel: Logi
 //                })
 
 
-val c= loginViewModel.captcha.value
+val c= loginViewModel.captchaInfo.toString()
                 Log.e("TAG", "get: "+ c)
 
                 decode(c)?.asImageBitmap()?.let { Image(it, contentDescription = "captcha", modifier = Modifier.size(90.dp,22.dp)) }

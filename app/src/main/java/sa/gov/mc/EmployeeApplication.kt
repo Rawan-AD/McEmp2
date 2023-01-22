@@ -9,11 +9,4 @@ import java.io.Closeable
 
 
 @HiltAndroidApp
-class EmployeeApplication: Application(), Closeable {
-    override fun close() {
-        TODO("Not yet implemented")
-    }
-
-
-
-}
+class EmployeeApplication: Application()

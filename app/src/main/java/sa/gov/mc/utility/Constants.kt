@@ -27,9 +27,9 @@ object Constants {
 }
 object AccountApi{
 
-    val retrofitServer:AccountApiService by lazy{
-        retrofitBuilder.create(AccountApiService::class.java)
-    }
+//    val retrofitServer:AccountApiService by lazy{
+//        retrofitBuilder.create(AccountApiService::class.java)
+//    }
 }
 enum class AccountApiStatus{LOADING,ERROR,DONE}
 

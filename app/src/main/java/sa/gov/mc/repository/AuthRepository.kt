@@ -1,5 +1,6 @@
 package sa.gov.mc.repository
 
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import javax.inject.Singleton
 
