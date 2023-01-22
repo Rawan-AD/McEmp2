@@ -1,7 +1,6 @@
 package sa.gov.mc.model
 
-import android.util.Base64
-import sa.gov.mc.screens.login.Captcha.captcha
+
 
 data class Captcha( val captcha: String,
     val uuid:String)

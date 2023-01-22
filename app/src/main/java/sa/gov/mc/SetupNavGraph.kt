@@ -4,6 +4,7 @@ package sa.gov.mc
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,6 +18,7 @@ import sa.gov.mc.screens.jobs.EmpJob
 import sa.gov.mc.screens.jobs.JobInfo
 import sa.gov.mc.screens.jobs.JobsUI
 import sa.gov.mc.screens.login.LoginScreen
+import sa.gov.mc.screens.login.LoginViewModel
 import sa.gov.mc.screens.login.OptScreen
 import sa.gov.mc.screens.onboarding.OnboardingUI
 

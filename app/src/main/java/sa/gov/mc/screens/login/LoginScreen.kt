@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -31,9 +32,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -44,19 +52,23 @@ import sa.gov.mc.model.Login
 import sa.gov.mc.model.LoginResponse
 import sa.gov.mc.network.AccountApiService
 
-import sa.gov.mc.screens.login.Captcha.uuid
+
 
 import sa.gov.mc.ui.theme.*
 import sa.gov.mc.utility.Background
 import sa.gov.mc.utility.Constants.retrofitBuilder
 
 import sa.gov.mc.utility.CustomButton
-
+import java.security.AccessController.getContext
+import javax.inject.Inject
 
 
 @Composable
-fun LoginScreen(navController: NavHostController) {
 
+fun LoginScreen(navController: NavHostController, loginViewModel:LoginViewModel= hiltViewModel()) {
+
+
+    val context= LocalContext.current
 Background()
     Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxSize()) {
 
@@ -74,7 +86,7 @@ Background()
 
 
         Spacer(Modifier.height(25.dp))
-        SimpleFilledTextFieldSample(navController)
+        SimpleFilledTextFieldSample(navController,loginViewModel)
 
         }
 
@@ -85,7 +97,7 @@ Background()
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
-fun SimpleFilledTextFieldSample(navController:NavController) {
+fun SimpleFilledTextFieldSample(navController:NavController,loginViewModel: LoginViewModel) {
 
     var userName by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -176,40 +188,38 @@ fun SimpleFilledTextFieldSample(navController:NavController) {
                     modifier = Modifier.size(15.dp)
                 )
                 Spacer(modifier = Modifier.width(130.dp))
-                var captchaInfo = retrofitBuilder.create(AccountApiService::class.java).getCaptcha()
-             var d: String="hhh"
-            lateinit var decodedImage:Bitmap
-
-                captchaInfo.enqueue(object : Callback<Captcha> {
-
-                                        @SuppressLint("SuspiciousIndentation")
-                    override fun onResponse(call: Call<Captcha>, response: Response<Captcha>) {
-
-
-                        d =response.body()?.captcha.toString()
-                                            decode(d)
-//                        val imageByte=Base64.decode(d,Base64.DEFAULT)
-//                   decodedImage =BitmapFactory.decodeByteArray(imageByte,0,imageByte.size)
-
-//Image(decodedImage.asImageBitmap(), contentDescription = "null")
-
-                        Log.e("finish", "onFinish:"+d)
-
-
-                    }
-
-                    override fun onFailure(call: Call<Captcha>, t: Throwable) {
-                        Log.e("Failure_GET", "onFailure:"+t.toString())
-                    }
-
-
-                })
+//                var captchaInfo = retrofitBuilder.create(AccountApiService::class.java).getCaptcha()
 
 
 
+//                captchaInfo.enqueue(object : Callback<Captcha> {
+//
+//                                        @SuppressLint("SuspiciousIndentation")
+//                    override fun onResponse(call: Call<Captcha>, response: Response<Captcha>) {
+//                                            c=response.body()?.captcha.toString()
+//                                            decode(c)
+////                        val imageByte=Base64.decode(d,Base64.DEFAULT)
+////                   decodedImage =BitmapFactory.decodeByteArray(imageByte,0,imageByte.size)
+//
+////Image(decodedImage.asImageBitmap(), contentDescription = "null")
+//
+//                        Log.e("finish", "onFinish:"+c)
+//
+//
+//                    }
+//
+//                    override fun onFailure(call: Call<Captcha>, t: Throwable) {
+//                        Log.e("Failure_GET", "onFailure:"+t.toString())
+//                    }
+//
+//
+//                })
 
 
-                decode(d)?.asImageBitmap()?.let { Image(it, contentDescription = "captcha", modifier = Modifier.size(90.dp,22.dp)) }
+val c= loginViewModel.captcha.value
+                Log.e("TAG", "get: "+ c)
+
+                decode(c)?.asImageBitmap()?.let { Image(it, contentDescription = "captcha", modifier = Modifier.size(90.dp,22.dp)) }
            }
 
 
@@ -283,13 +293,13 @@ fun SimpleFilledTextFieldSample(navController:NavController) {
 @Preview
 @Composable
 fun defaultPreview2() {
-    LoginScreen(rememberNavController())
+//    LoginScreen(rememberNavController())
 
 
 }
 
-fun decode(d:String):Bitmap?{
-    var decodeStr: ByteArray? = Base64.decode(d,Base64.DEFAULT)
+fun decode(d:String?):Bitmap?{
+    var decodeStr: ByteArray? = Base64.decode(d.toString(),Base64.DEFAULT)
     var decoded:Bitmap? = decodeStr?.let { BitmapFactory.decodeByteArray(decodeStr,0, it.size) }
 return decoded
 }

@@ -16,6 +16,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import dagger.hilt.android.AndroidEntryPoint
 import sa.gov.mc.screens.contacts.ContactsScreen
 import sa.gov.mc.screens.login.LoginScreen
 import sa.gov.mc.screens.login.OptScreen
@@ -24,6 +25,7 @@ import sa.gov.mc.screens.profile.ProfileUi
 import sa.gov.mc.ui.theme.GrayBackground
 import sa.gov.mc.ui.theme.McEmpTheme
 import sa.gov.mc.utility.BottomBar
+
 
 class MainActivity : ComponentActivity() {
 

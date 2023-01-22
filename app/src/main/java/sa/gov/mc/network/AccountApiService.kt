@@ -17,7 +17,7 @@ import java.io.FileOutputStream
 
 interface AccountApiService {
     @GET("captcha")
-    fun getCaptcha():Call<Captcha>
+    suspend fun getCaptcha():Captcha
 
     @POST("account/login")
     fun postLogin(@Body login: Login):Call<LoginResponse>

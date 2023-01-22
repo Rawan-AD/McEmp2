@@ -5,6 +5,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import sa.gov.mc.network.AccountApiService
+import sa.gov.mc.utility.Constants.retrofitBuilder
 import java.security.KeyStore
 import java.security.SecureRandom
 import java.security.cert.CertificateException
@@ -17,26 +18,26 @@ import javax.net.ssl.X509TrustManager
 
 object Constants {
 
-  const val Base_Url = " https://employee-staging.mc.gov.sa/dev/api/"
- val retrofitBuilder: Retrofit by  lazy {
-   Retrofit.Builder().baseUrl(Base_Url).addConverterFactory(GsonConverterFactory.create())
+  const val Base_Url = "https://employee-staging.mc.gov.sa/dev/api/"
+
+ val retrofitBuilder= Retrofit.Builder().baseUrl(Base_Url).addConverterFactory(GsonConverterFactory.create())
        .client(Instance.getUnsafeOkHttpClient())
-    .build()}
+    .build()
 
 }
+object AccountApi{
 
+    val retrofitServer:AccountApiService by lazy{
+        retrofitBuilder.create(AccountApiService::class.java)
+    }
+}
+enum class AccountApiStatus{LOADING,ERROR,DONE}
 
 object Instance {
 
- const val BASE_URL: String = " https://employee-staging.mc.gov.sa/dev/api/"
 
-    val retrofit: Retrofit by lazy {
-        Retrofit
-            .Builder()
-            .baseUrl(BASE_URL)
-            .client(getUnsafeOkHttpClient())
-            .build()
-    }
+
+
     fun getUnsafeOkHttpClient(): OkHttpClient? {
         return try {
             // Create a trust manager that does not validate certificate chains
