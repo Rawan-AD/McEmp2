@@ -43,6 +43,10 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -95,7 +99,7 @@ Background()
 
 }
 
-@SuppressLint("SuspiciousIndentation")
+@SuppressLint("SuspiciousIndentation", "CoroutineCreationDuringComposition")
 @Composable
 fun LoginTextField(navController:NavController,loginViewModel: LoginViewModel) {
 
@@ -191,38 +195,12 @@ fun LoginTextField(navController:NavController,loginViewModel: LoginViewModel) {
                             reload(loginViewModel)
                         }
                 )
-//                Spacer(modifier = Modifier.width(130.dp))
-//                var captchaInfo = retrofitBuilder.create(AccountApiService::class.java).getCaptcha()
 
-
-
-//                captchaInfo.enqueue(object : Callback<Captcha> {
-//
-//                                        @SuppressLint("SuspiciousIndentation")
-//                    override fun onResponse(call: Call<Captcha>, response: Response<Captcha>) {
-//                                            c=response.body()?.captcha.toString()
-//                                            decode(c)
-////                        val imageByte=Base64.decode(d,Base64.DEFAULT)
-////                   decodedImage =BitmapFactory.decodeByteArray(imageByte,0,imageByte.size)
-//
-////Image(decodedImage.asImageBitmap(), contentDescription = "null")
-//
-//                        Log.e("finish", "onFinish:"+c)
-//
-//
-//                    }
-//
-//                    override fun onFailure(call: Call<Captcha>, t: Throwable) {
-//                        Log.e("Failure_GET", "onFailure:"+t.toString())
-//                    }
-//
-//
-//                })
 
 
              val c= loginViewModel.getCaptchaInfo()
                 val d2= loginViewModel.result.captcha
-val logi=
+
 
 
                 decode(d2)?.asImageBitmap()?.let { Image(it, contentDescription = "captcha", modifier = Modifier.fillMaxSize()) }
@@ -276,23 +254,9 @@ val logi=
                 )
 
              var s=  loginViewModel.login(Login(userName, password, "1f737bbe250d4839a7289728641cc5aa","8mg8d" ))
-            var logi=loginViewModel.loginResponse.requestId
-            Log.e("logi", "logi:"+logi)
-//                var captchaInfow =
-//                    retrofitBuilder.create(AccountApiService::class.java).login(login)
-//                captchaInfow.enqueue(object : Callback<LoginResponse> {
-//                    override fun onResponse(
-//                        call: Call<LoginResponse>,
-//                        response: Response<LoginResponse>
-//                    ) {
-//                        Log.e(TAG, "onResponse: " + response.body()?.uuid)
-//                    }
-//
-//                    override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-//                        Log.e(TAG, "onFailu: " + t)
-//                    }
-//
-//                })
+
+            Log.e("logi", "logi:"+s)
+
 
 
             }

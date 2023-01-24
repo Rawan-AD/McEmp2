@@ -1,6 +1,7 @@
 package sa.gov.mc.screens.login
 
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -28,7 +29,7 @@ class LoginViewModel @Inject constructor(private val captchaRepository:CaptchaRe
     val captchaInfo: LiveData<Captcha> = _captchaInfo
     val captcha = MutableLiveData<String>()
     var result = Captcha("", "")
- var loginResponse=LoginResponse("","")
+ var loginResponse=LoginResponse(0,"")
 
 
 
@@ -59,13 +60,14 @@ class LoginViewModel @Inject constructor(private val captchaRepository:CaptchaRe
     }
 
 
-    fun login(login: Login){
+    fun login(login: Login):LoginResponse{
 
 
         _status.value = AccountApiStatus.LOADING
         viewModelScope.launch {
          try{
              loginResponse= loginRepository.login(login)
+             Log.e("tagViewModel","$loginResponse")
              _status.value = AccountApiStatus.DONE
 
 
@@ -80,6 +82,8 @@ class LoginViewModel @Inject constructor(private val captchaRepository:CaptchaRe
 
 
         }
+
+        return loginResponse
 
     }
 }
