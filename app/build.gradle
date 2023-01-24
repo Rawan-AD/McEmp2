@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
-    id 'com.google.dagger.hilt.android'
+    id 'dagger.hilt.android.plugin'
 
 }
 
@@ -46,7 +46,7 @@ android {
         compose true
     }
 
-  
+
     composeOptions {
         kotlinCompilerExtensionVersion '1.1.1'
     }
@@ -103,12 +103,11 @@ dependencies {
 
 
 
-    // Hilt
-    implementation 'com.google.dagger:hilt-android:2.44'
-    annotationProcessor 'com.google.dagger:hilt-android-compiler:2.44'
-implementation"androidx.hilt:hilt-navigation-compose:1.0.0"
 
-
+    // Dagger Hilt
+    implementation "com.google.dagger:hilt-android:2.44"
+    kapt "com.google.dagger:hilt-android-compiler:2.44"
+    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
 
 
 }

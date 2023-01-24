@@ -9,8 +9,10 @@ import kotlinx.coroutines.Dispatchers
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import sa.gov.mc.data.CaptchaRemoteDataSource
+import sa.gov.mc.data.LoginRemoteDataSource
 import sa.gov.mc.network.AccountApiService
 import sa.gov.mc.repository.CaptchaRepository
+import sa.gov.mc.repository.LoginRepository
 import sa.gov.mc.utility.AccountApiStatus
 import sa.gov.mc.utility.Constants
 import sa.gov.mc.utility.Instance
@@ -37,7 +39,7 @@ object NetworkModel {
   fun provideDispatcher():CoroutineDispatcher= Dispatchers.IO
 
 @Provides
-@Singleton
+
 
 fun provideCaptchaRemoteDataSource(accountApiService: AccountApiService) =
     CaptchaRemoteDataSource(accountApiService, provideDispatcher())
@@ -52,4 +54,23 @@ fun provideCaptchaRemoteDataSource(accountApiService: AccountApiService) =
     @Singleton
     fun provideCaptchaRepository(accountApiService: AccountApiService):CaptchaRepository =
         CaptchaRepository(provideCaptchaRemoteDataSource(accountApiService))
+
+
+
+    @Provides
+
+
+    fun provideLoginRemoteDataSource(accountApiService: AccountApiService) =
+        LoginRemoteDataSource(accountApiService, provideDispatcher())
+
+
+
+
+
+
+
+    @Provides
+    @Singleton
+    fun provideLoginRepository(accountApiService: AccountApiService): LoginRepository =
+LoginRepository(provideLoginRemoteDataSource(accountApiService))
 }

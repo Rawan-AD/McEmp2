@@ -32,7 +32,6 @@ object AccountApi{
 //    }
 }
 enum class AccountApiStatus{LOADING,ERROR,DONE}
-
 object Instance {
 
 

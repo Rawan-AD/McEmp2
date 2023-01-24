@@ -58,7 +58,7 @@ fun SetupNavGraph(
         composable(
             route = Screens.LoginScreen.route
         ) {
-            LoginScreen(navController = navController)
+            LoginScreen(navController = navController,loginViewModel=hiltViewModel())
         }
         // TODO 7: Navigation setup (to)
         composable(

@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory
 import android.util.Base64
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -65,7 +66,7 @@ import javax.inject.Inject
 
 @Composable
 
-fun LoginScreen (navController:NavController) {
+fun LoginScreen (navController:NavController,loginViewModel:LoginViewModel) {
 
 
 Background()
@@ -83,9 +84,9 @@ Background()
                 contentScale = ContentScale.Fit
             )
 
-val loginViewModel:LoginViewModel= hiltViewModel()
+
         Spacer(Modifier.height(25.dp))
-        SimpleFilledTextFieldSample(navController,loginViewModel)
+       LoginTextField(navController,loginViewModel)
 
         }
 
@@ -96,7 +97,7 @@ val loginViewModel:LoginViewModel= hiltViewModel()
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
-fun SimpleFilledTextFieldSample(navController:NavController,loginViewModel: LoginViewModel) {
+fun LoginTextField(navController:NavController,loginViewModel: LoginViewModel) {
 
     var userName by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -176,17 +177,21 @@ fun SimpleFilledTextFieldSample(navController:NavController,loginViewModel: Logi
             Spacer(modifier = Modifier.height(15.dp))
             Row(
                 Modifier
-                    .width(240.dp)
-                    .height(30.dp),
-                horizontalArrangement = Arrangement.Start,
+                    .width(200.dp)
+                    .height(90.dp),
+                horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
                     painterResource(id = R.drawable.reload),
                     contentDescription = "reload",
-                    modifier = Modifier.size(15.dp)
+                    modifier = Modifier
+                        .size(25.dp)
+                        .clickable {
+                            reload(loginViewModel)
+                        }
                 )
-                Spacer(modifier = Modifier.width(130.dp))
+//                Spacer(modifier = Modifier.width(130.dp))
 //                var captchaInfo = retrofitBuilder.create(AccountApiService::class.java).getCaptcha()
 
 
@@ -215,10 +220,12 @@ fun SimpleFilledTextFieldSample(navController:NavController,loginViewModel: Logi
 //                })
 
 
-val c= loginViewModel.captchaInfo.toString()
-                Log.e("TAG", "get: "+ c)
+             val c= loginViewModel.getCaptchaInfo()
+                val d2= loginViewModel.result.captcha
+val logi=
 
-                decode(c)?.asImageBitmap()?.let { Image(it, contentDescription = "captcha", modifier = Modifier.size(90.dp,22.dp)) }
+
+                decode(d2)?.asImageBitmap()?.let { Image(it, contentDescription = "captcha", modifier = Modifier.fillMaxSize()) }
            }
 
 
@@ -267,27 +274,36 @@ val c= loginViewModel.captchaInfo.toString()
                         .absolutePadding(right = 65.dp, left = 66.dp),
                     color = PrimaryColor
                 )
-                var login = Login("uat1", "asdf@mc100", "b2986410195949f392cded3cc6c47a09", "rrh2e")
-                var captchaInfow =
-                    retrofitBuilder.create(AccountApiService::class.java).postLogin(login)
-                captchaInfow.enqueue(object : Callback<LoginResponse> {
-                    override fun onResponse(
-                        call: Call<LoginResponse>,
-                        response: Response<LoginResponse>
-                    ) {
-                        Log.e(TAG, "onResponse: " + response.body()?.uuid)
-                    }
 
-                    override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                        Log.e(TAG, "onFailu: " + t)
-                    }
-
-                })
+             var s=  loginViewModel.login(Login(userName, password, "1f737bbe250d4839a7289728641cc5aa","8mg8d" ))
+            var logi=loginViewModel.loginResponse.requestId
+            Log.e("logi", "logi:"+logi)
+//                var captchaInfow =
+//                    retrofitBuilder.create(AccountApiService::class.java).login(login)
+//                captchaInfow.enqueue(object : Callback<LoginResponse> {
+//                    override fun onResponse(
+//                        call: Call<LoginResponse>,
+//                        response: Response<LoginResponse>
+//                    ) {
+//                        Log.e(TAG, "onResponse: " + response.body()?.uuid)
+//                    }
+//
+//                    override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+//                        Log.e(TAG, "onFailu: " + t)
+//                    }
+//
+//                })
 
 
             }
         }
     }
+
+fun reload(loginViewModel: LoginViewModel) {
+    val c= loginViewModel.getCaptchaInfo()
+    val d2= loginViewModel.result.captcha
+    decode(d2)
+}
 
 @Preview
 @Composable
@@ -297,8 +313,10 @@ fun defaultPreview2() {
 
 }
 
-fun decode(d:String?):Bitmap?{
+fun decode(d:String):Bitmap?{
     var decodeStr: ByteArray? = Base64.decode(d.toString(),Base64.DEFAULT)
     var decoded:Bitmap? = decodeStr?.let { BitmapFactory.decodeByteArray(decodeStr,0, it.size) }
 return decoded
 }
+
+

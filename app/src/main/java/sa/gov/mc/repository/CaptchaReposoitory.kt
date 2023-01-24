@@ -10,16 +10,19 @@ class CaptchaRepository @Inject constructor(
     private val captchaRemoteDataSource: CaptchaRemoteDataSource
 ) {
 
-    suspend fun captchaLogin(): Captcha {
+   lateinit var captcha:Captcha
+
+    suspend fun captchaLogin(): Captcha{
         withContext(Dispatchers.IO) {
             try {
-                val captcha = captchaRemoteDataSource.getCaptcha()
+                captcha = captchaRemoteDataSource.getCaptcha()
                 return@withContext captcha
 
             } catch (e: Exception) {
+
             }
         }
-return Captcha("","")
+return captcha
 
     }
 }

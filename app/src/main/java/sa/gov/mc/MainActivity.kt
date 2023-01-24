@@ -26,7 +26,7 @@ import sa.gov.mc.ui.theme.GrayBackground
 import sa.gov.mc.ui.theme.McEmpTheme
 import sa.gov.mc.utility.BottomBar
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     // TODO 2: declare a var

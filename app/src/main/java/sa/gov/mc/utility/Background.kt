@@ -14,7 +14,7 @@ fun Background (){
     Box(modifier = Modifier.fillMaxSize(), Alignment.Center) {
         Image(
             modifier = Modifier.matchParentSize(),
-            painter = painterResource(id = R.drawable.app___onboarding___bg),
+            painter = painterResource(id = R.drawable.on_boarding_png),
             contentDescription = "background_image",
             contentScale = ContentScale.FillBounds
         )
