@@ -13,7 +13,7 @@ import kotlin.math.log
 class LoginRemoteDataSource(private val api: AccountApiService, private val dispatcher: CoroutineDispatcher = Dispatchers.IO) {
 
 lateinit var s:LoginResponse
-    suspend fun login(login:Login){
+    suspend fun login(login:Login):LoginResponse{
 
         withContext(dispatcher) {
 //          login_.username=login.username
@@ -27,6 +27,7 @@ lateinit var s:LoginResponse
         }
 
         Log.e("datasource response", "$s")
+        return s
 
 }
 }

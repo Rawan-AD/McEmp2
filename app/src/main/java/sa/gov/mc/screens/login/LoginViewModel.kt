@@ -65,8 +65,7 @@ class LoginViewModel @Inject constructor(private val captchaRepository:CaptchaRe
         _status.value = AccountApiStatus.LOADING
         viewModelScope.launch {
          try{
-         loginRepository.login(login)
-
+             loginResponse= loginRepository.login(login)
              _status.value = AccountApiStatus.DONE
 
 

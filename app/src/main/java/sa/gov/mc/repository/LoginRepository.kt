@@ -15,14 +15,14 @@ import kotlin.math.log
 class LoginRepository @Inject constructor(private val loginRemoteDataSource:LoginRemoteDataSource) {
     lateinit var loginResponse:LoginResponse
 
-    suspend fun login(login: Login){
+    suspend fun login(login: Login):LoginResponse{
 
         withContext(Dispatchers.IO) {
             try {
 
 
 
-    loginRemoteDataSource.login(login)
+   loginResponse= loginRemoteDataSource.login(login)
             Log.e("login repo","$loginResponse")
 
             } catch (e: Exception) {
@@ -30,7 +30,7 @@ class LoginRepository @Inject constructor(private val loginRemoteDataSource:Logi
             }
         }
 
-
+return  loginResponse
     }
 
 
