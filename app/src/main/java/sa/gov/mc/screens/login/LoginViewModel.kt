@@ -2,12 +2,13 @@ package sa.gov.mc.screens.login
 
 
 import android.util.Log
+import androidx.compose.foundation.interaction.DragInteraction
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import sa.gov.mc.data.model.Captcha
 import sa.gov.mc.data.model.Login
 import sa.gov.mc.data.model.LoginResponse
@@ -26,10 +27,11 @@ class LoginViewModel @Inject constructor(private val captchaRepository:CaptchaRe
     private val _status = MutableLiveData<AccountApiStatus>()
     val status: LiveData<AccountApiStatus> = _status
     private var _captchaInfo = MutableLiveData<Captcha>()
+    private var _lofinInfo = MutableLiveData<LoginResponse>()
     val captchaInfo: LiveData<Captcha> = _captchaInfo
     val captcha = MutableLiveData<String>()
     var result = Captcha("", "")
- var loginResponse=LoginResponse(0,"")
+  var loginResponse:LoginResponse= LoginResponse(0,"")
 
 
 
@@ -60,20 +62,21 @@ class LoginViewModel @Inject constructor(private val captchaRepository:CaptchaRe
     }
 
 
-    fun login(login: Login):LoginResponse{
+    fun login(login: Login){
 
 
-        _status.value = AccountApiStatus.LOADING
         viewModelScope.launch {
-         try{
-             loginResponse= loginRepository.login(login)
-             Log.e("tagViewModel","$loginResponse")
-             _status.value = AccountApiStatus.DONE
+            _status.value = AccountApiStatus.LOADING
+         try{ loginResponse =loginRepository.login(login)
+             Log.e("tagViewModel", "$loginResponse")
+                 _status.value = AccountApiStatus.DONE
 
 
          }
          catch (e:Exception){
              _status.value = AccountApiStatus.ERROR
+           _lofinInfo.value=LoginResponse(0,"")
+             Log.e("ERROR ViewModel", "$e")
 
 
          }
@@ -82,8 +85,8 @@ class LoginViewModel @Inject constructor(private val captchaRepository:CaptchaRe
 
 
         }
+//        Log.e("tagViewModel", "$loginResponse")
 
-        return loginResponse
 
     }
 }

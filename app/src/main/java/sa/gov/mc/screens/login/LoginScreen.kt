@@ -90,8 +90,12 @@ Background()
 
 
         Spacer(Modifier.height(25.dp))
-       LoginTextField(navController,loginViewModel)
 
+
+        val c= loginViewModel.getCaptchaInfo()
+        val d2= loginViewModel.result.captcha
+       LoginTextField(navController,d2)
+loginViewModel.login(Login("dd","dd","dd","Dd"))
         }
 
 
@@ -101,7 +105,7 @@ Background()
 
 @SuppressLint("SuspiciousIndentation", "CoroutineCreationDuringComposition")
 @Composable
-fun LoginTextField(navController:NavController,loginViewModel: LoginViewModel) {
+fun LoginTextField(navController:NavController,d2:String) {
 
     var userName by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -190,16 +194,12 @@ fun LoginTextField(navController:NavController,loginViewModel: LoginViewModel) {
                     painterResource(id = R.drawable.reload),
                     contentDescription = "reload",
                     modifier = Modifier
-                        .size(25.dp)
-                        .clickable {
-                            reload(loginViewModel)
-                        }
-                )
+                        .size(25.dp))
 
 
 
-             val c= loginViewModel.getCaptchaInfo()
-                val d2= loginViewModel.result.captcha
+
+
 
 
 
@@ -253,9 +253,7 @@ fun LoginTextField(navController:NavController,loginViewModel: LoginViewModel) {
                     color = PrimaryColor
                 )
 
-             var s=  loginViewModel.login(Login(userName, password, "1f737bbe250d4839a7289728641cc5aa","8mg8d" ))
 
-            Log.e("logi", "logi:"+s)
 
 
 
