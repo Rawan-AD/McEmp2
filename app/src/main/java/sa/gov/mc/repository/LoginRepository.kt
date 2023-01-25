@@ -18,17 +18,17 @@ import kotlin.math.log
 
 @Singleton
 class LoginRepository @Inject constructor(private val loginRemoteDataSource: LoginRemoteDataSource) {
-    lateinit var loginResponse: LoginResponse
+    lateinit var loginResponse: Any
 
 
-    suspend fun login(login: Login): LoginResponse {
+    suspend fun login(login: Login): Any {
         withContext(Dispatchers.IO) {
             try {
                 loginResponse = loginRemoteDataSource.login(login)
                 Log.e("tagrepo","$login")
                 return@withContext loginResponse
             } catch (e: Exception) {
-                Log.e("catch repo","$login")
+                Log.e("catch repo","${e.cause}")
                 loginResponse= LoginResponse(2,"111")
 
             }

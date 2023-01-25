@@ -9,7 +9,7 @@ import sa.gov.mc.screens.news.New
 
 
     @GET("news/public-news")
-    fun getAllPublicNews(): Call<List<New>>
+    fun getAllPublicNews(): List<New>
 
 
     @GET("news/public-news/{id}")
@@ -17,23 +17,23 @@ import sa.gov.mc.screens.news.New
     @GET("news/external-news")
     fun getAllExternalNews():Call<List<New>>
 @GET("news/external-news/{id}")
-fun getExternalNewById():Call<New>
+fun getExternalNewById():New
 
 
     @GET("news/internal-news")
-    fun getAllInternalNews():Call<List<New>>
+    fun getAllInternalNews():List<New>
 
 
     @GET("new/internal-news/{id}")
-    fun getInternalNewsById():Call<New>
+    fun getInternalNewsById():New
 
 
     @GET("news/external-news/{id}/image/{imageId}" )
-    fun getExternalNewImage():Call<String>
+    fun getExternalNewImage():String
 
 
     @GET( "news/internal-news/{id}/image/{imageId}")
-    fun getInternalNewImage():Call<String>
+    fun getInternalNewImage():String
 
  }
 

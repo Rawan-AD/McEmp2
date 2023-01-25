@@ -10,9 +10,12 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import sa.gov.mc.data.CaptchaRemoteDataSource
 import sa.gov.mc.data.LoginRemoteDataSource
+import sa.gov.mc.data.NewsRemoteDataSource
 import sa.gov.mc.network.AccountApiService
+import sa.gov.mc.network.NewsApiService
 import sa.gov.mc.repository.CaptchaRepository
 import sa.gov.mc.repository.LoginRepository
+import sa.gov.mc.repository.NewsRepository
 import sa.gov.mc.utility.AccountApiStatus
 import sa.gov.mc.utility.Constants
 import sa.gov.mc.utility.Instance
@@ -74,3 +77,19 @@ fun provideCaptchaRemoteDataSource(accountApiService: AccountApiService) =
     fun provideLoginRepository(accountApiService: AccountApiService): LoginRepository =
 LoginRepository(provideLoginRemoteDataSource(accountApiService))
 }
+
+
+@Provides
+fun provideNewsRemoteDataSource(newsApiService: NewsApiService) =
+    NewsRemoteDataSource(newsApiService, NetworkModel.provideDispatcher())
+
+
+
+
+
+
+
+@Provides
+@Singleton
+fun provideNewsRepository(newsApiService: NewsApiService): NewsRepository =
+    NewsRepository(provideNewsRemoteDataSource(newsApiService))

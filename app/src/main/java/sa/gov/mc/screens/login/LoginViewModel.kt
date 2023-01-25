@@ -31,14 +31,12 @@ class LoginViewModel @Inject constructor(private val captchaRepository:CaptchaRe
     val captchaInfo: LiveData<Captcha> = _captchaInfo
     val captcha = MutableLiveData<String>()
     var result = Captcha("", "")
-  var loginResponse:LoginResponse= LoginResponse(0,"")
+  var loginResponse:Any= Any()
 
 
 
 
-//    init {
-//        getCaptchaInfo()
-//    }
+
 
     fun getCaptchaInfo() {
         viewModelScope.launch {
