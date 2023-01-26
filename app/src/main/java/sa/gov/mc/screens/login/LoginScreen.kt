@@ -95,7 +95,7 @@ Background()
         val c= loginViewModel.getCaptchaInfo()
         val d2= loginViewModel.result.captcha
        LoginTextField(navController,d2)
-loginViewModel.login(Login("dd","dd","dd","Dd"))
+loginViewModel.login(Login("uat1","asdf@mc100","be7ca43c02664dacad0d3e85b169eb0d","redx5"))
         }
 
 

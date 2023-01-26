@@ -11,6 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import sa.gov.mc.data.CaptchaRemoteDataSource
 import sa.gov.mc.data.LoginRemoteDataSource
 import sa.gov.mc.data.NewsRemoteDataSource
+import sa.gov.mc.di.NetworkModel.provideDispatcher
 import sa.gov.mc.network.AccountApiService
 import sa.gov.mc.network.NewsApiService
 import sa.gov.mc.repository.CaptchaRepository
@@ -27,37 +28,28 @@ import javax.inject.Singleton
 object NetworkModel {
 
 
-
-  @Provides
-  @Singleton
-  fun provideRetrofit():Retrofit=
-    Retrofit.Builder().baseUrl(Constants.Base_Url).addConverterFactory(
-        GsonConverterFactory.create())
-        .client(Instance.getUnsafeOkHttpClient())
-        .build()
-
+    @Provides
+    @Singleton
+    fun provideRetrofit(): Retrofit =
+        Retrofit.Builder().baseUrl(Constants.Base_Url).addConverterFactory(
+            GsonConverterFactory.create()
+        )
+            .client(Instance.getUnsafeOkHttpClient())
+            .build()
 
 
     @Provides
-  fun provideDispatcher():CoroutineDispatcher= Dispatchers.IO
+    fun provideDispatcher(): CoroutineDispatcher = Dispatchers.IO
 
-@Provides
-
-
-fun provideCaptchaRemoteDataSource(accountApiService: AccountApiService) =
-    CaptchaRemoteDataSource(accountApiService, provideDispatcher())
-
-
-
-
-
+    @Provides
+    fun provideCaptchaRemoteDataSource(accountApiService: AccountApiService) =
+        CaptchaRemoteDataSource(accountApiService, provideDispatcher())
 
 
     @Provides
     @Singleton
-    fun provideCaptchaRepository(accountApiService: AccountApiService):CaptchaRepository =
+    fun provideCaptchaRepository(accountApiService: AccountApiService): CaptchaRepository =
         CaptchaRepository(provideCaptchaRemoteDataSource(accountApiService))
-
 
 
     @Provides
@@ -67,29 +59,20 @@ fun provideCaptchaRemoteDataSource(accountApiService: AccountApiService) =
         LoginRemoteDataSource(accountApiService, provideDispatcher())
 
 
+    @Provides
+    @Singleton
+    fun provideLoginRepository(accountApiService: AccountApiService): LoginRepository =
+        LoginRepository(provideLoginRemoteDataSource(accountApiService))
 
 
-
+    @Provides
+    fun provideNewsRemoteDataSource(newsApiService: NewsApiService) =
+        NewsRemoteDataSource(newsApiService, provideDispatcher())
 
 
     @Provides
     @Singleton
-    fun provideLoginRepository(accountApiService: AccountApiService): LoginRepository =
-LoginRepository(provideLoginRemoteDataSource(accountApiService))
+    fun provideNewsRepository(newsApiService: NewsApiService): NewsRepository =
+        NewsRepository(provideNewsRemoteDataSource(newsApiService))
+
 }
-
-
-@Provides
-fun provideNewsRemoteDataSource(newsApiService: NewsApiService) =
-    NewsRemoteDataSource(newsApiService, NetworkModel.provideDispatcher())
-
-
-
-
-
-
-
-@Provides
-@Singleton
-fun provideNewsRepository(newsApiService: NewsApiService): NewsRepository =
-    NewsRepository(provideNewsRemoteDataSource(newsApiService))

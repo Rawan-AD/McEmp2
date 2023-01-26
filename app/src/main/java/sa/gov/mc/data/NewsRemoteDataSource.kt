@@ -5,8 +5,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import sa.gov.mc.network.NewsApiService
 import sa.gov.mc.screens.news.New
+import javax.inject.Inject
 
-class NewsRemoteDataSource(private val api: NewsApiService, private val dispatcher: CoroutineDispatcher = Dispatchers.IO) {
+class NewsRemoteDataSource @Inject constructor(private val api: NewsApiService, private val dispatcher: CoroutineDispatcher = Dispatchers.IO) {
     suspend fun allPublicNews():List<New> =
         withContext(dispatcher) {api.getAllPublicNews()
 

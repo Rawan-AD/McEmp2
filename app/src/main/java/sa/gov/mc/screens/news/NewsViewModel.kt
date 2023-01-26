@@ -9,7 +9,7 @@ import sa.gov.mc.repository.NewsRepository
 import sa.gov.mc.utility.AccountApiStatus
 import javax.inject.Inject
 
-class NewsViewModel@Inject constructor(private val newsRepository: NewsRepository) : ViewModel(){
+class NewsViewModel @Inject constructor(private val newsRepository: NewsRepository) : ViewModel(){
 
 private val _status = MutableLiveData<AccountApiStatus>()
 val status: LiveData<AccountApiStatus> = _status
@@ -35,7 +35,7 @@ fun getAllPublicNews(){
 
         } catch (e: Exception) {
             _status.value = AccountApiStatus.ERROR
-            newsInfo = listOf(New("vvvvvvvvvvvvvvvvvvvvvv", "vvvvvvvvvvvvvvv",""))
+//            newsInfo = listOf(New("vvvvvvvvvvvvvvvvvvvvvv", "vvvvvvvvvvvvvvv",""))
 
 
         }
