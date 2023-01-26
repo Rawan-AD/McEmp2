@@ -1,6 +1,7 @@
 package sa.gov.mc.screens.login
 
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.interaction.DragInteraction
 import androidx.lifecycle.LiveData
@@ -31,11 +32,10 @@ class LoginViewModel @Inject constructor(private val captchaRepository:CaptchaRe
     val captchaInfo: LiveData<Captcha> = _captchaInfo
     val captcha = MutableLiveData<String>()
     var result = Captcha("", "")
-  var loginResponse:Any= Any()
+    var loginResponse: Any = Any()
 
-
-
-
+    private val _errorEnableMsg = MutableLiveData("")
+    val errorEnableMsg: LiveData<String> get() = _errorEnableMsg
 
 
     fun getCaptchaInfo() {
@@ -60,26 +60,25 @@ class LoginViewModel @Inject constructor(private val captchaRepository:CaptchaRe
     }
 
 
-    fun login(login: Login){
+    @SuppressLint("SuspiciousIndentation")
+    fun login(login: Login) {
 
 
         viewModelScope.launch {
             _status.value = AccountApiStatus.LOADING
-         try{ loginResponse =loginRepository.login(login)
-             Log.e("tagViewModel", "$loginResponse")
-                 _status.value = AccountApiStatus.DONE
+            try {
+                loginResponse = loginRepository.login(login)
+                Log.e("tagViewModel", "$loginResponse")
+                _status.value = AccountApiStatus.DONE
 
 
-         }
-         catch (e:Exception){
-             _status.value = AccountApiStatus.ERROR
-           _lofinInfo.value=LoginResponse(0,"")
-             Log.e("ERROR ViewModel", "$e")
+            } catch (e: Exception) {
+                _status.value = AccountApiStatus.ERROR
+                _lofinInfo.value = LoginResponse(0, "")
+                Log.e("ERROR ViewModel", "$e")
 
 
-         }
-
-
+            }
 
 
         }
@@ -87,4 +86,30 @@ class LoginViewModel @Inject constructor(private val captchaRepository:CaptchaRe
 
 
     }
+
+    private fun isUserNameEmpty(username: String): Boolean {
+        return if (username.isEmpty()) {
+            _errorEnableMsg.value += "name"
+            false
+        } else true
+
+    }
+
+    private fun isUserPasswordEmpty(userPassword: String): Boolean {
+        return if (userPassword.isEmpty()) {
+            _errorEnableMsg.value += "password"
+            false
+        } else true
+
+    }
+
+//    private fun isUserInfoForLoginNotEmpty(userName:String,password:String,captcha:String):Boolean{
+//        return if(isUserPasswordEmpty(password)){
+//            if(isUserNameEmpty(userName)){}}
+//        return false
+//    }
+
 }
+
+
+

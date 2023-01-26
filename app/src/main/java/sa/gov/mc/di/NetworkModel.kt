@@ -9,12 +9,15 @@ import kotlinx.coroutines.Dispatchers
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import sa.gov.mc.data.CaptchaRemoteDataSource
+import sa.gov.mc.data.HrRemoteDataSource
 import sa.gov.mc.data.LoginRemoteDataSource
 import sa.gov.mc.data.NewsRemoteDataSource
 import sa.gov.mc.di.NetworkModel.provideDispatcher
 import sa.gov.mc.network.AccountApiService
+import sa.gov.mc.network.HrService
 import sa.gov.mc.network.NewsApiService
 import sa.gov.mc.repository.CaptchaRepository
+import sa.gov.mc.repository.HrRepository
 import sa.gov.mc.repository.LoginRepository
 import sa.gov.mc.repository.NewsRepository
 import sa.gov.mc.utility.AccountApiStatus
@@ -53,8 +56,6 @@ object NetworkModel {
 
 
     @Provides
-
-
     fun provideLoginRemoteDataSource(accountApiService: AccountApiService) =
         LoginRemoteDataSource(accountApiService, provideDispatcher())
 
@@ -74,5 +75,17 @@ object NetworkModel {
     @Singleton
     fun provideNewsRepository(newsApiService: NewsApiService): NewsRepository =
         NewsRepository(provideNewsRemoteDataSource(newsApiService))
+
+
+
+    @Provides
+    fun provideHrRemoteDataSource(hrService: HrService) =
+        HrRemoteDataSource(hrService, provideDispatcher())
+
+
+    @Provides
+    @Singleton
+    fun provideHrRepository(hrService: HrService): HrRepository =
+        HrRepository(provideHrRemoteDataSource(hrService))
 
 }
