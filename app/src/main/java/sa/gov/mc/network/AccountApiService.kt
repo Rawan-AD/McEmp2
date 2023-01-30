@@ -17,8 +17,9 @@ interface AccountApiService {
     suspend fun getCaptcha(): Captcha
 
     @POST("account/login")
-   suspend fun login(@Body login: Login):Any
-
+   suspend fun login(@Body login: Login): Call<LoginResponse>
+//   @GET("account/login")
+//   suspend fun getLogin():LoginResponse
 
    @POST("account/check-otp")@Headers("device: application/json")
     fun checkOtp(@Body checkOTP: CheckOTP):Call<String>

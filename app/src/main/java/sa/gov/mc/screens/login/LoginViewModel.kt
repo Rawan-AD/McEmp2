@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
+import okhttp3.internal.wait
 import sa.gov.mc.data.model.Captcha
 import sa.gov.mc.data.model.Login
 import sa.gov.mc.data.model.LoginResponse
@@ -32,8 +33,8 @@ class LoginViewModel @Inject constructor(private val captchaRepository:CaptchaRe
     val captchaInfo: LiveData<Captcha> = _captchaInfo
     val captcha = MutableLiveData<String>()
     var result = Captcha("", "")
-    var loginResponse: Any = Any()
-
+    var loginResponse=LoginResponse(0,"")
+    var loginResponse2= LoginResponse(1,"")
     private val _errorEnableMsg = MutableLiveData("")
     val errorEnableMsg: LiveData<String> get() = _errorEnableMsg
 
@@ -61,14 +62,17 @@ class LoginViewModel @Inject constructor(private val captchaRepository:CaptchaRe
 
 
     @SuppressLint("SuspiciousIndentation")
-    fun login(login: Login) {
+   fun login(login: Login) {
 
 
         viewModelScope.launch {
             _status.value = AccountApiStatus.LOADING
             try {
+                delay(5000)
+
                 loginResponse = loginRepository.login(login)
-                Log.e("tagViewModel", "$loginResponse")
+                Log.e("tagV", "${loginResponse}")
+                delay(5000)
                 _status.value = AccountApiStatus.DONE
 
 
@@ -86,6 +90,9 @@ class LoginViewModel @Inject constructor(private val captchaRepository:CaptchaRe
 
 
     }
+
+
+
 
     private fun isUserNameEmpty(username: String): Boolean {
         return if (username.isEmpty()) {

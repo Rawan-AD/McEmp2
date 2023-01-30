@@ -43,10 +43,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -94,10 +91,9 @@ Background()
 
         val c= loginViewModel.getCaptchaInfo()
         val d2= loginViewModel.result.captcha
-       LoginTextField(navController,d2)
-loginViewModel.login(Login("uat1","asdf@mc100","be7ca43c02664dacad0d3e85b169eb0d","redx5"))
-        }
+       LoginTextField(navController,d2,loginViewModel)
 
+        }
 
 
 
@@ -105,7 +101,7 @@ loginViewModel.login(Login("uat1","asdf@mc100","be7ca43c02664dacad0d3e85b169eb0d
 
 @SuppressLint("SuspiciousIndentation", "CoroutineCreationDuringComposition")
 @Composable
-fun LoginTextField(navController:NavController,d2:String) {
+fun LoginTextField(navController:NavController,d2:String,loginViewModel: LoginViewModel) {
 
     var userName by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -253,12 +249,14 @@ fun LoginTextField(navController:NavController,d2:String) {
                     color = PrimaryColor
                 )
 
-
-
-
+//
+//           var r= loginViewModel.result.uuid
+//Log.e("r","$r")
+    loginViewModel.login(Login("uat1", "asdf@mc100", loginViewModel.result.uuid, captcha))
 
             }
         }
+
     }
 
 fun reload(loginViewModel: LoginViewModel) {
