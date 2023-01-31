@@ -6,6 +6,7 @@ import android.os.Environment
 import retrofit2.Call
 import retrofit2.http.*
 import android.util.Base64
+import kotlinx.coroutines.flow.Flow
 import sa.gov.mc.data.model.*
 
 import java.io.File
@@ -17,7 +18,7 @@ interface AccountApiService {
     suspend fun getCaptcha(): Captcha
 
     @POST("account/login")
-   suspend fun login(@Body login: Login): Call<LoginResponse>
+   suspend fun login(@Body login: Login): LoginResponse
 //   @GET("account/login")
 //   suspend fun getLogin():LoginResponse
 

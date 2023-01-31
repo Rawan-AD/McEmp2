@@ -2,6 +2,7 @@ package sa.gov.mc.network
 
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Headers
 
 import sa.gov.mc.screens.news.New
@@ -11,6 +12,7 @@ import sa.gov.mc.screens.news.New
 
     @GET("news/public-news")
 //    @Headers("token: String")
+//    @Header("Authorization") token: String
     fun getAllPublicNews(): List<New>
 
 

@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import okhttp3.internal.wait
 import sa.gov.mc.data.model.Captcha
 import sa.gov.mc.data.model.Login
@@ -17,6 +18,7 @@ import sa.gov.mc.data.model.LoginResponse
 import sa.gov.mc.repository.CaptchaRepository
 import sa.gov.mc.repository.LoginRepository
 import sa.gov.mc.utility.AccountApiStatus
+import sa.gov.mc.utility.State
 
 import javax.inject.Inject
 
@@ -33,8 +35,9 @@ class LoginViewModel @Inject constructor(private val captchaRepository:CaptchaRe
     val captchaInfo: LiveData<Captcha> = _captchaInfo
     val captcha = MutableLiveData<String>()
     var result = Captcha("", "")
-    var loginResponse=LoginResponse(0,"")
-    var loginResponse2= LoginResponse(1,"")
+  private val loginStateFlow : MutableStateFlow<State> = MutableStateFlow(State.Empty)
+    val _loginStateFlow: StateFlow<State> = loginStateFlow
+
     private val _errorEnableMsg = MutableLiveData("")
     val errorEnableMsg: LiveData<String> get() = _errorEnableMsg
 
@@ -62,32 +65,20 @@ class LoginViewModel @Inject constructor(private val captchaRepository:CaptchaRe
 
 
     @SuppressLint("SuspiciousIndentation")
-   fun login(login: Login) {
-
-
+   fun login(login: Login) :State{
         viewModelScope.launch {
-            _status.value = AccountApiStatus.LOADING
-            try {
-                delay(5000)
+            loginStateFlow.value = State.Loading
+            loginRepository.login(login)
+                .catch { e->
+                    loginStateFlow.value = State.Failure(e)
+                }.collect {
+                    data -> loginStateFlow.value =State.Success(data)
+                    Log.e("coll","${data.requestId}")
 
-                loginResponse = loginRepository.login(login)
-                Log.e("tagV", "${loginResponse}")
-                delay(5000)
-                _status.value = AccountApiStatus.DONE
-
-
-            } catch (e: Exception) {
-                _status.value = AccountApiStatus.ERROR
-                _lofinInfo.value = LoginResponse(0, "")
-                Log.e("ERROR ViewModel", "$e")
-
-
-            }
-
-
+                }
         }
-//        Log.e("tagViewModel", "$loginResponse")
 
+return loginStateFlow.value
 
     }
 

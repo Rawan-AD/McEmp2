@@ -3,6 +3,7 @@ package sa.gov.mc.screens.login
 
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
@@ -44,11 +45,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import okhttp3.internal.wait
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import sa.gov.mc.R
 import sa.gov.mc.Screens
+import sa.gov.mc.data.SessionManager
 import sa.gov.mc.data.model.Captcha
 import sa.gov.mc.data.model.Login
 import sa.gov.mc.data.model.LoginResponse
@@ -70,6 +73,12 @@ import javax.inject.Inject
 fun LoginScreen (navController:NavController,loginViewModel:LoginViewModel) {
 
 
+
+
+    val context = LocalContext.current
+    lateinit var sessionManager: SessionManager
+    sessionManager = SessionManager(context)
+//    private lateinit var apiClient: ApiClient
 Background()
     Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxSize()) {
 
@@ -251,8 +260,9 @@ fun LoginTextField(navController:NavController,d2:String,loginViewModel: LoginVi
 
 //
 //           var r= loginViewModel.result.uuid
-//Log.e("r","$r")
-    loginViewModel.login(Login("uat1", "asdf@mc100", loginViewModel.result.uuid, captcha))
+            var d= loginViewModel.login(Login("uat1", "asdf@mc100", loginViewModel.result.uuid, captcha))
+
+          Log.e("screen","${d}")
 
             }
         }

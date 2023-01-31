@@ -13,6 +13,7 @@ import javax.inject.Inject
 class NewsRemoteDataSource @Inject constructor(private val api: NewsApiService, private val dispatcher: CoroutineDispatcher = Dispatchers.IO) {
     suspend fun allPublicNews():List<New> =
         withContext(dispatcher) {api.getAllPublicNews()
+//            token = "Bearer ${sessionManager.fetchAuthToken()}")
         }
     suspend fun allExternalNews():List<New> =
         withContext(dispatcher) {api.getAllInternalNews()
