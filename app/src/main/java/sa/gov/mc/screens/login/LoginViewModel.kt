@@ -4,6 +4,7 @@ package sa.gov.mc.screens.login
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.interaction.DragInteraction
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,10 +24,12 @@ import sa.gov.mc.utility.State
 import javax.inject.Inject
 
 
-
 @HiltViewModel
 
-class LoginViewModel @Inject constructor(private val captchaRepository:CaptchaRepository,private val loginRepository: LoginRepository) : ViewModel() {
+class LoginViewModel @Inject constructor(
+    private val captchaRepository: CaptchaRepository,
+    private val loginRepository: LoginRepository
+) : ViewModel() {
 
     private val _status = MutableLiveData<AccountApiStatus>()
     val status: LiveData<AccountApiStatus> = _status
@@ -35,7 +38,7 @@ class LoginViewModel @Inject constructor(private val captchaRepository:CaptchaRe
     val captchaInfo: LiveData<Captcha> = _captchaInfo
     val captcha = MutableLiveData<String>()
     var result = Captcha("", "")
-  private val loginStateFlow : MutableStateFlow<State> = MutableStateFlow(State.Empty)
+   val loginStateFlow: MutableStateFlow<State> = MutableStateFlow(State.Empty)
     val _loginStateFlow: StateFlow<State> = loginStateFlow
 
     private val _errorEnableMsg = MutableLiveData("")
@@ -65,24 +68,22 @@ class LoginViewModel @Inject constructor(private val captchaRepository:CaptchaRe
 
 
     @SuppressLint("SuspiciousIndentation")
-   fun login(login: Login) :State{
+    fun login(login: Login): State {
         viewModelScope.launch {
             loginStateFlow.value = State.Loading
             loginRepository.login(login)
-                .catch { e->
+                .catch { e ->
                     loginStateFlow.value = State.Failure(e)
-                }.collect {
-                    data -> loginStateFlow.value =State.Success(data)
-                    Log.e("coll","${data.requestId}")
+                }.collect { data ->
 
+                    loginStateFlow.value = State.Success(data)
+                    Log.e("coll", "${data.requestId}")
                 }
         }
 
-return loginStateFlow.value
+        return loginStateFlow.value
 
     }
-
-
 
 
     private fun isUserNameEmpty(username: String): Boolean {

@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -35,16 +36,16 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.*
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import okhttp3.internal.wait
 import retrofit2.Call
 import retrofit2.Callback
@@ -70,47 +71,46 @@ import javax.inject.Inject
 
 @Composable
 
-fun LoginScreen (navController:NavController,loginViewModel:LoginViewModel) {
-
-
+fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
 
 
     val context = LocalContext.current
     lateinit var sessionManager: SessionManager
     sessionManager = SessionManager(context)
 //    private lateinit var apiClient: ApiClient
-Background()
-    Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxSize()) {
+    Background()
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
 
 
-            Image(
-                painter = painterResource(R.drawable.group_72),
-                contentDescription = null,
-                modifier = Modifier
+        Image(
+            painter = painterResource(R.drawable.group_72),
+            contentDescription = null,
+            modifier = Modifier
 
-                    .size( 170.dp,120.dp)
-
-                    ,
-                contentScale = ContentScale.Fit
-            )
+                .size(170.dp, 120.dp),
+            contentScale = ContentScale.Fit
+        )
 
 
         Spacer(Modifier.height(25.dp))
 
 
-        val c= loginViewModel.getCaptchaInfo()
-        val d2= loginViewModel.result.captcha
-       LoginTextField(navController,d2,loginViewModel)
+        val c = loginViewModel.getCaptchaInfo()
+        val captcha = loginViewModel.result.captcha
+        LoginTextField(navController, captcha, loginViewModel)
 
-        }
-
+    }
 
 
 }
 
 @SuppressLint("SuspiciousIndentation", "CoroutineCreationDuringComposition")
 @Composable
-fun LoginTextField(navController:NavController,d2:String,loginViewModel: LoginViewModel) {
+fun LoginTextField(navController: NavController, d2: String, loginViewModel: LoginViewModel) {
 
     var userName by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -199,7 +199,8 @@ fun LoginTextField(navController:NavController,d2:String,loginViewModel: LoginVi
                     painterResource(id = R.drawable.reload),
                     contentDescription = "reload",
                     modifier = Modifier
-                        .size(25.dp))
+                        .size(25.dp)
+                )
 
 
 
@@ -208,85 +209,103 @@ fun LoginTextField(navController:NavController,d2:String,loginViewModel: LoginVi
 
 
 
-                decode(d2)?.asImageBitmap()?.let { Image(it, contentDescription = "captcha", modifier = Modifier.fillMaxSize()) }
-           }
-
-
-                OutlinedTextField(
-                    value = captcha,
-                    onValueChange = { captcha = it },
-
-                    label = {
-                        Text(
-                            text = "اكتب كودالتحقق هنا",
-                            fontFamily = FontFamily(Font(R.font.frutiger_roman)),
-                            fontWeight = FontWeight.Normal,
-                            color = Pinkish_Gray,
-                            textAlign = TextAlign.Center,
-                            fontSize = 14.sp,
-                            modifier = Modifier.absolutePadding(right = 60.dp)
-
-
-                        )
-                    },
-
-                    modifier = Modifier
-                        .height(60.dp)
-
-                        .absolutePadding(right = 65.5.dp, left = 65.5.dp),
-                    colors = textFieldColors(
-                        backgroundColor = Color.White,
-                        cursorColor = PrimaryColor,
-                        focusedIndicatorColor = PrimaryColor,
-                        errorIndicatorColor = Red
+                decode(d2)?.asImageBitmap()?.let {
+                    Image(
+                        it,
+                        contentDescription = "captcha",
+                        modifier = Modifier.fillMaxSize()
                     )
-                )
-
-
-
-
-                Spacer(modifier = Modifier.height(25.dp))
-
-
-                CustomButton(
-                    title = "تسجيل الدخول",
-                    navController,
-                    route = Screens.OptScreen.route,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .absolutePadding(right = 65.dp, left = 66.dp),
-                    color = PrimaryColor
-                )
-
-//
-//           var r= loginViewModel.result.uuid
-            var d= loginViewModel.login(Login("uat1", "asdf@mc100", loginViewModel.result.uuid, captcha))
-
-          Log.e("screen","${d}")
-
+                }
             }
-        }
 
+
+            OutlinedTextField(
+                value = captcha,
+                onValueChange = { captcha = it },
+
+                label = {
+                    Text(
+                        text = "اكتب كودالتحقق هنا",
+                        fontFamily = FontFamily(Font(R.font.frutiger_roman)),
+                        fontWeight = FontWeight.Normal,
+                        color = Pinkish_Gray,
+                        textAlign = TextAlign.Center,
+                        fontSize = 14.sp,
+                        modifier = Modifier.absolutePadding(right = 60.dp)
+
+
+                    )
+                },
+
+                modifier = Modifier
+                    .height(60.dp)
+
+                    .absolutePadding(right = 65.5.dp, left = 65.5.dp),
+                colors = textFieldColors(
+                    backgroundColor = Color.White,
+                    cursorColor = PrimaryColor,
+                    focusedIndicatorColor = PrimaryColor,
+                    errorIndicatorColor = Red
+                )
+            )
+
+
+
+
+            Spacer(modifier = Modifier.height(25.dp))
+
+
+            CustomButton(
+                title = "تسجيل الدخول",
+                navController,
+                route = Screens.OptScreen.route,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .absolutePadding(right = 65.dp, left = 66.dp),
+                color = PrimaryColor
+            )
+           val lifecycleOwner = LocalLifecycleOwner.current
+            val exampleEntitiesFlowLifecycleAware = remember(loginViewModel.loginStateFlow,lifecycleOwner){
+              loginViewModel.loginStateFlow.flowWithLifecycle(lifecycleOwner.lifecycle,Lifecycle.State.STARTED)
+            }
+//            val exampleEntities:List<LoginResponse> by exampleEntitiesFlowLifecycleAware.collectAsState(
+//                initial = emptyList<List<LoginResponse>>())
+
+
+
+            var d = loginViewModel.login(
+                Login(
+                    "uat1",
+                    "asdf@mc100",
+                    loginViewModel.result.uuid,
+                    captcha
+                )
+            )
+
+            Log.e("screen", "${d}")
+        }
     }
 
-fun reload(loginViewModel: LoginViewModel) {
-    val c= loginViewModel.getCaptchaInfo()
-    val d2= loginViewModel.result.captcha
-    decode(d2)
 }
 
-@Preview
-@Composable
-fun defaultPreview2() {
-//    LoginScreen(rememberNavController())
+//fun reload(loginViewModel: LoginViewModel) {
+//    val c= loginViewModel.getCaptchaInfo()
+//    val d2= loginViewModel.result.captcha
+//    decode(d2)
+//}
 
+//@Preview
+//@Composable
+//fun defaultPreview2() {
+////    LoginScreen(rememberNavController())
+//
+//
+//}
 
-}
-
-fun decode(d:String):Bitmap?{
-    var decodeStr: ByteArray? = Base64.decode(d.toString(),Base64.DEFAULT)
-    var decoded:Bitmap? = decodeStr?.let { BitmapFactory.decodeByteArray(decodeStr,0, it.size) }
-return decoded
+fun decode(d: String): Bitmap? {
+    var decodeStr: ByteArray? = Base64.decode(d, Base64.DEFAULT)
+    var decoded: Bitmap? = decodeStr?.let { BitmapFactory.decodeByteArray(decodeStr, 0, it.size) }
+    return decoded
 }
 
 
