@@ -39,7 +39,7 @@ class LoginViewModel @Inject constructor(
     val captcha = MutableLiveData<String>()
     var result = Captcha("", "")
    val loginStateFlow: MutableStateFlow<State> = MutableStateFlow(State.Empty)
-    val _loginStateFlow: StateFlow<State> = loginStateFlow
+    val _loginStateFlow: StateFlow<State> get() = loginStateFlow
 
     private val _errorEnableMsg = MutableLiveData("")
     val errorEnableMsg: LiveData<String> get() = _errorEnableMsg
@@ -68,16 +68,18 @@ class LoginViewModel @Inject constructor(
 
 
     @SuppressLint("SuspiciousIndentation")
-    fun login(login: Login): State {
+    fun login(userName:String,password:String,id:String,captcha:String): State {
         viewModelScope.launch {
             loginStateFlow.value = State.Loading
-            loginRepository.login(login)
+            Log.e("before", "${loginStateFlow.value}")
+            loginRepository.login(userName,password,id,captcha)
                 .catch { e ->
                     loginStateFlow.value = State.Failure(e)
+                    Log.e("catch", "${e.localizedMessage}")
                 }.collect { data ->
 
                     loginStateFlow.value = State.Success(data)
-                    Log.e("coll", "${data.requestId}")
+                    Log.e("coll", "${"ggg"}")
                 }
         }
 

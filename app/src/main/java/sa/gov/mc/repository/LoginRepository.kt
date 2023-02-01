@@ -20,8 +20,10 @@ import kotlin.math.log
 class LoginRepository @Inject constructor (private val loginRemoteDataSource: LoginRemoteDataSource) {
 
 
-    suspend fun login(login: Login) :Flow<LoginResponse> = flow {
-emit(loginRemoteDataSource.login(login))}
+    suspend fun login(userName:String,password:String,id:String,captcha:String) :Flow<LoginResponse> = flow {
+        var login=Login(username = userName, password = password,uuid=id, answer = captcha)
+       emit(loginRemoteDataSource.login(login))
+    }
 
 
 

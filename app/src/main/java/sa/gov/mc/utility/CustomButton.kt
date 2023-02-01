@@ -19,7 +19,7 @@ import sa.gov.mc.ui.theme.*
 
 
 @Composable
-fun CustomButton(title: String, navController: NavController, route:String,modifier: Modifier,color:Color) {
+fun CustomButton(title: String, navController: NavController, route:String,modifier: Modifier,color:Color,onClick: () -> Unit={}) {
 
 
         OutlinedButton(
@@ -28,6 +28,7 @@ fun CustomButton(title: String, navController: NavController, route:String,modif
 
 
                 .clip(Shapes.ExtraExtraSmall), onClick = {
+                onClick()
                 navController.navigate(route)
 
             },

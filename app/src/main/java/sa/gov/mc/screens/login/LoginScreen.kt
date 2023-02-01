@@ -46,6 +46,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.emptyFlow
 import okhttp3.internal.wait
 import retrofit2.Call
 import retrofit2.Callback
@@ -108,7 +109,7 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
 
 }
 
-@SuppressLint("SuspiciousIndentation", "CoroutineCreationDuringComposition")
+@SuppressLint("SuspiciousIndentation", "CoroutineCreationDuringComposition", "RememberReturnType")
 @Composable
 fun LoginTextField(navController: NavController, d2: String, loginViewModel: LoginViewModel) {
 
@@ -262,31 +263,43 @@ fun LoginTextField(navController: NavController, d2: String, loginViewModel: Log
                 modifier = Modifier
                     .fillMaxWidth()
                     .absolutePadding(right = 65.dp, left = 66.dp),
-                color = PrimaryColor
+                color = PrimaryColor,
+                onClick = { var s=loginViewModel.result.uuid
+
+                    loginViewModel.login("uat1","asdf@mc100",s,captcha)
+//                    Log.e("id","$s")
+//                    Log.e("f","$f")
+//                    Log.e("captcha","$captcha")
+
+                }
             )
-           val lifecycleOwner = LocalLifecycleOwner.current
+       val lifecycleOwner = LocalLifecycleOwner.current
             val exampleEntitiesFlowLifecycleAware = remember(loginViewModel.loginStateFlow,lifecycleOwner){
-              loginViewModel.loginStateFlow.flowWithLifecycle(lifecycleOwner.lifecycle,Lifecycle.State.STARTED)
+              loginViewModel.loginStateFlow.flowWithLifecycle(lifecycleOwner.lifecycle,Lifecycle.State.STARTED)}
+//            val example:LoginResponse by exampleEntitiesFlowLifecycleAware.collectAsState()
+
+
             }
 //            val exampleEntities:List<LoginResponse> by exampleEntitiesFlowLifecycleAware.collectAsState(
 //                initial = emptyList<List<LoginResponse>>())
 
 
+//
+//            var d = loginViewModel.login(
+//                Login(
+//                    "uat1",
+//                    "asdf@mc100",
+//                    loginViewModel.result.uuid,
+//                    captcha
+//                )
+//            )
+//
 
-            var d = loginViewModel.login(
-                Login(
-                    "uat1",
-                    "asdf@mc100",
-                    loginViewModel.result.uuid,
-                    captcha
-                )
-            )
-
-            Log.e("screen", "${d}")
         }
+//    Log.e("screen", "${loginViewModel.loginStateFlow}")
     }
 
-}
+
 
 //fun reload(loginViewModel: LoginViewModel) {
 //    val c= loginViewModel.getCaptchaInfo()

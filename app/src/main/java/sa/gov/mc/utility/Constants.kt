@@ -2,6 +2,7 @@ package sa.gov.mc.utility
 
 import android.app.Service
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import sa.gov.mc.network.AccountApiService
@@ -78,8 +79,8 @@ object Instance {
 
             val trustManager =
                 trustManagers[0] as X509TrustManager
-
-
+            val interceptor =HttpLoggingInterceptor()
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
             val builder = OkHttpClient.Builder()
             builder.sslSocketFactory(sslSocketFactory, trustManager)
             builder.hostnameVerifier(HostnameVerifier { _, _ -> true })
