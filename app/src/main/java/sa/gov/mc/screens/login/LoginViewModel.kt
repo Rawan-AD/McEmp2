@@ -32,14 +32,12 @@ class LoginViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _status = MutableLiveData<AccountApiStatus>()
-    val status: LiveData<AccountApiStatus> = _status
-    private var _captchaInfo = MutableLiveData<Captcha>()
-    private var _lofinInfo = MutableLiveData<LoginResponse>()
-    val captchaInfo: LiveData<Captcha> = _captchaInfo
+
     val captcha = MutableLiveData<String>()
-    var result = Captcha("", "")
+
+  var result =MutableLiveData<Captcha>()
    val loginStateFlow: MutableStateFlow<State> = MutableStateFlow(State.Empty)
-    val _loginStateFlow: StateFlow<State> get() = loginStateFlow
+
 
     private val _errorEnableMsg = MutableLiveData("")
     val errorEnableMsg: LiveData<String> get() = _errorEnableMsg
@@ -50,14 +48,14 @@ class LoginViewModel @Inject constructor(
             _status.value = AccountApiStatus.LOADING
 
             try {
-//           _captchaInfo.value=AccountApi.retrofitServer.getCaptcha()
-                result = captchaRepository.captchaLogin()
+                result.value= captchaRepository.captchaLogin()
+                captcha.value=result.value?.captcha
                 _status.value = AccountApiStatus.DONE
 
 
             } catch (e: Exception) {
                 _status.value = AccountApiStatus.ERROR
-                _captchaInfo.value = Captcha("vvvvvvvvvvvvvvvvvvvvvv", "vvvvvvvvvvvvvvv")
+result.value= Captcha("","")
 
 
             }

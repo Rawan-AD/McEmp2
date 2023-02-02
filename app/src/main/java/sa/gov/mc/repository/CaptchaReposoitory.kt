@@ -1,5 +1,6 @@
 package sa.gov.mc.repository
 
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import sa.gov.mc.data.CaptchaRemoteDataSource
@@ -11,6 +12,7 @@ class CaptchaRepository @Inject constructor(
 ) {
 
    lateinit var captcha:Captcha
+
 
     suspend fun captchaLogin(): Captcha{
         withContext(Dispatchers.IO) {

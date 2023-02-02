@@ -16,6 +16,7 @@ import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.TextFieldDefaults.textFieldColors
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -68,16 +69,17 @@ import sa.gov.mc.utility.Constants.retrofitBuilder
 import sa.gov.mc.utility.CustomButton
 import java.security.AccessController.getContext
 import javax.inject.Inject
-
-
+ var captchText=""
 @Composable
-
 fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
 
 
-    val context = LocalContext.current
-    lateinit var sessionManager: SessionManager
-    sessionManager = SessionManager(context)
+
+var context= LocalContext.current
+captchText= getCaptcha(context,loginViewModel = loginViewModel)
+//    val context = LocalContext.current
+//  lateinit var sessionManager: SessionManager
+//    sessionManager = SessionManager(context)
 //    private lateinit var apiClient: ApiClient
     Background()
     Column(
@@ -99,19 +101,26 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
 
         Spacer(Modifier.height(25.dp))
 
-
-        val c = loginViewModel.getCaptchaInfo()
-        val captcha = loginViewModel.result.captcha
-        LoginTextField(navController, captcha, loginViewModel)
+//        getCaptcha(loginViewModel)
+//       loginViewModel.getCaptchaInfo()
+//        val captcha = loginViewModel.result.value?.captcha
+        LoginTextField(navController,loginViewModel)
 
     }
 
 
 }
 
-@SuppressLint("SuspiciousIndentation", "CoroutineCreationDuringComposition", "RememberReturnType")
 @Composable
-fun LoginTextField(navController: NavController, d2: String, loginViewModel: LoginViewModel) {
+fun getCaptcha(context:Context,loginViewModel: LoginViewModel):String{
+    loginViewModel.getCaptchaInfo()
+if(loginViewModel.result.value!=null)  captchText= loginViewModel.captcha.value!!
+return captchText
+
+}
+
+@Composable
+fun LoginTextField(navController: NavController, loginViewModel: LoginViewModel){
 
     var userName by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -196,30 +205,27 @@ fun LoginTextField(navController: NavController, d2: String, loginViewModel: Log
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                var  context= LocalContext.current
                 Image(
                     painterResource(id = R.drawable.reload),
                     contentDescription = "reload",
                     modifier = Modifier
                         .size(25.dp)
-                )
+                        .clickable {
 
+                        })
 
+                            decode(captchText)
+                                ?.asImageBitmap()
+                                ?.let {
+                                    Image(
+                                        it,
+                                        contentDescription = "captcha",
+                                        modifier = Modifier.size(200.dp, 100.dp)
+                                    )
+                                }
 
-
-
-
-
-
-                decode(d2)?.asImageBitmap()?.let {
-                    Image(
-                        it,
-                        contentDescription = "captcha",
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
-            }
-
-
+                        }
             OutlinedTextField(
                 value = captcha,
                 onValueChange = { captcha = it },
@@ -264,24 +270,22 @@ fun LoginTextField(navController: NavController, d2: String, loginViewModel: Log
                     .fillMaxWidth()
                     .absolutePadding(right = 65.dp, left = 66.dp),
                 color = PrimaryColor,
-                onClick = { var s=loginViewModel.result.uuid
+                onClick = { var s=loginViewModel.result.value!!.uuid
 
                     loginViewModel.login("uat1","asdf@mc100",s,captcha)
-//                    Log.e("id","$s")
-//                    Log.e("f","$f")
-//                    Log.e("captcha","$captcha")
+
+
 
                 }
             )
-       val lifecycleOwner = LocalLifecycleOwner.current
-            val exampleEntitiesFlowLifecycleAware = remember(loginViewModel.loginStateFlow,lifecycleOwner){
-              loginViewModel.loginStateFlow.flowWithLifecycle(lifecycleOwner.lifecycle,Lifecycle.State.STARTED)}
-//            val example:LoginResponse by exampleEntitiesFlowLifecycleAware.collectAsState()
+//       val lifecycleOwner = LocalLifecycleOwner.current
+//            val exampleEntitiesFlowLifecycleAware = remember(loginViewModel.loginStateFlow,lifecycleOwner){
+//              loginViewModel.loginStateFlow.flowWithLifecycle(lifecycleOwner.lifecycle,Lifecycle.State.STARTED)}
+
 
 
             }
-//            val exampleEntities:List<LoginResponse> by exampleEntitiesFlowLifecycleAware.collectAsState(
-//                initial = emptyList<List<LoginResponse>>())
+
 
 
 //
@@ -307,13 +311,7 @@ fun LoginTextField(navController: NavController, d2: String, loginViewModel: Log
 //    decode(d2)
 //}
 
-//@Preview
-//@Composable
-//fun defaultPreview2() {
-////    LoginScreen(rememberNavController())
-//
-//
-//}
+
 
 fun decode(d: String): Bitmap? {
     var decodeStr: ByteArray? = Base64.decode(d, Base64.DEFAULT)
