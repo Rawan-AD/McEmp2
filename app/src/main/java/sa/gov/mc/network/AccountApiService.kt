@@ -23,14 +23,14 @@ interface AccountApiService {
 //   suspend fun getLogin():LoginResponse
 
    @POST("account/check-otp")@Headers("device: application/json")
-    fun checkOtp(@Body checkOTP: CheckOTP):Call<String>
+    fun checkOtp(@Body checkOTP: CheckOTP):OtpResponse
 
 
     @POST("account/check-otp")
-    suspend fun checkOtp(@Body login: Login):TokenResponse
+    suspend fun refreshToken(@Body token: RefreshToken):TokenResponse
 
     @POST("account/resend-otp")
-    suspend fun resendOtp(@Body uuid: String):LoginResponse
+    suspend fun resendOtp(@Body uuid: UUID):LoginResponse
 }
 
 

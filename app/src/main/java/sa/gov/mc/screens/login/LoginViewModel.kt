@@ -16,7 +16,9 @@ import okhttp3.internal.wait
 import sa.gov.mc.data.model.Captcha
 import sa.gov.mc.data.model.Login
 import sa.gov.mc.data.model.LoginResponse
+import sa.gov.mc.data.model.OtpResponse
 import sa.gov.mc.repository.CaptchaRepository
+import sa.gov.mc.repository.CheckOtpRepository
 import sa.gov.mc.repository.LoginRepository
 import sa.gov.mc.utility.AccountApiStatus
 import sa.gov.mc.utility.State
@@ -28,7 +30,8 @@ import javax.inject.Inject
 
 class LoginViewModel @Inject constructor(
     private val captchaRepository: CaptchaRepository,
-    private val loginRepository: LoginRepository
+    private val loginRepository: LoginRepository,
+    private val checkOtpRepository: CheckOtpRepository
 ) : ViewModel() {
 
     private val _status = MutableLiveData<AccountApiStatus>()
@@ -107,6 +110,34 @@ result.value= Captcha("","")
 //            if(isUserNameEmpty(userName)){}}
 //        return false
 //    }
+
+    fun checkOtp(){
+
+        val otpResponse = MutableLiveData<OtpResponse>()
+        viewModelScope.launch {
+            _status.value = AccountApiStatus.LOADING
+
+            try {
+
+                otpResponse.value= checkOtpRepository.checkOtp()
+
+                _status.value = AccountApiStatus.DONE
+
+
+            } catch (e: Exception) {
+                _status.value = AccountApiStatus.ERROR
+                otpResponse.value= OtpResponse("","")
+
+
+            }
+
+
+        }
+
+    }
+
+
+
 
 }
 

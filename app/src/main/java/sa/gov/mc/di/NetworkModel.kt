@@ -8,18 +8,12 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import sa.gov.mc.data.CaptchaRemoteDataSource
-import sa.gov.mc.data.HrRemoteDataSource
-import sa.gov.mc.data.LoginRemoteDataSource
-import sa.gov.mc.data.NewsRemoteDataSource
+import sa.gov.mc.data.*
 import sa.gov.mc.di.NetworkModel.provideDispatcher
 import sa.gov.mc.network.AccountApiService
 import sa.gov.mc.network.HrService
 import sa.gov.mc.network.NewsApiService
-import sa.gov.mc.repository.CaptchaRepository
-import sa.gov.mc.repository.HrRepository
-import sa.gov.mc.repository.LoginRepository
-import sa.gov.mc.repository.NewsRepository
+import sa.gov.mc.repository.*
 import sa.gov.mc.utility.AccountApiStatus
 import sa.gov.mc.utility.Constants
 import sa.gov.mc.utility.Instance
@@ -87,5 +81,19 @@ object NetworkModel {
     @Singleton
     fun provideHrRepository(hrService: HrService): HrRepository =
         HrRepository(provideHrRemoteDataSource(hrService))
+
+
+
+
+    @Provides
+    fun provideCheckOtpRemoteDataSource(accountApiService: AccountApiService) =
+        CheckOtpRemoteDataSource(accountApiService, provideDispatcher())
+
+
+    @Provides
+    @Singleton
+    fun provideCheckOtoRepository(accountApiService: AccountApiService): CheckOtpRepository =
+        CheckOtpRepository(provideCheckOtpRemoteDataSource(accountApiService))
+
 
 }
