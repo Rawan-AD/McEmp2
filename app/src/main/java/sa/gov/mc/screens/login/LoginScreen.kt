@@ -17,6 +17,7 @@ import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.TextFieldDefaults.textFieldColors
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -73,7 +74,7 @@ import javax.inject.Inject
 @Composable
 fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
 
-
+//val state=loginViewModel.state
 
 var context= LocalContext.current
 captchText= getCaptcha(context,loginViewModel = loginViewModel)
@@ -121,7 +122,7 @@ return captchText
 
 @Composable
 fun LoginTextField(navController: NavController, loginViewModel: LoginViewModel){
-
+var isError by rememberSaveable{ mutableStateOf(false) }
     var userName by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var captcha by remember { mutableStateOf("") }
@@ -130,6 +131,7 @@ fun LoginTextField(navController: NavController, loginViewModel: LoginViewModel)
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
+
         ) {
 
 
@@ -205,7 +207,7 @@ fun LoginTextField(navController: NavController, loginViewModel: LoginViewModel)
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                var  context= LocalContext.current
+
                 Image(
                     painterResource(id = R.drawable.reload),
                     contentDescription = "reload",
@@ -270,10 +272,11 @@ fun LoginTextField(navController: NavController, loginViewModel: LoginViewModel)
                     .fillMaxWidth()
                     .absolutePadding(right = 65.dp, left = 66.dp),
                 color = PrimaryColor,
-                onClick = { var s=loginViewModel.result.value!!.uuid
-
+                onClick = {
+                    var s=loginViewModel.result.value!!.uuid
                     loginViewModel.login("uat1","asdf@mc100",s,captcha)
-
+                   var f=loginViewModel.checkOtp()
+                    Log.e("otp", "$f")
 
 
                 }

@@ -1,5 +1,6 @@
 package sa.gov.mc.screens.login
 
+import android.widget.EditText
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -96,7 +97,7 @@ Background()
 
             )
             Spacer(modifier = Modifier.width(12.dp))
-            Text(
+           Text(
                 "",
                 modifier = Modifier
                     .size(59.dp, 56.dp)

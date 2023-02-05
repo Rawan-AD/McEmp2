@@ -1,5 +1,6 @@
 package sa.gov.mc.repository
 
+import android.annotation.SuppressLint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import sa.gov.mc.data.CaptchaRemoteDataSource
@@ -16,6 +17,7 @@ class CheckOtpRepository @Inject constructor(
     lateinit var otp: OtpResponse
 
 
+    @SuppressLint("SuspiciousIndentation")
     suspend fun checkOtp():OtpResponse {
         withContext(Dispatchers.IO) {
             try {
