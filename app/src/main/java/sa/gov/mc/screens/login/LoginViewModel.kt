@@ -3,32 +3,21 @@ package sa.gov.mc.screens.login
 
 import android.annotation.SuppressLint
 import android.util.Log
-import androidx.compose.foundation.interaction.DragInteraction
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
-import okhttp3.internal.wait
 import sa.gov.mc.data.model.Captcha
 import sa.gov.mc.data.model.Login
-import sa.gov.mc.data.model.LoginResponse
 import sa.gov.mc.data.model.OtpResponse
-import sa.gov.mc.domain.ValidatePassword
-import sa.gov.mc.domain.ValidateUserName
 import sa.gov.mc.repository.CaptchaRepository
 import sa.gov.mc.repository.CheckOtpRepository
 import sa.gov.mc.repository.LoginRepository
 import sa.gov.mc.utility.AccountApiStatus
 import sa.gov.mc.utility.State
-import java.security.PrivateKey
 
 import javax.inject.Inject
 
@@ -50,6 +39,7 @@ class LoginViewModel @Inject constructor(
    val loginStateFlow: MutableStateFlow<State> = MutableStateFlow(State.Empty)
 //private var validateionEventChannel = Channel<ValidationEvent>()
 //    val validationEvents=validateionEventChannel.receiveAsFlow()
+
 
     private val _errorEnableMsg = MutableLiveData("")
     val errorEnableMsg: LiveData<String> get() = _errorEnableMsg
@@ -110,26 +100,38 @@ result.value= Captcha("","")
 //sealed class ValidationEvent{
 //    object Success:ValidationEvent()
 //}
+//    repository.returnSomeItems{human, animal ->
+//
+//        Log.e("humans", human.toString())
+//        Log.e("animals", animal.toString())
+//    }
 
-    @SuppressLint("SuspiciousIndentation")
-    fun login(userName:String,password:String,id:String,captcha:String): State {
-        viewModelScope.launch {
-            loginStateFlow.value = State.Loading
-            Log.e("before", "${loginStateFlow.value}")
-            loginRepository.login(userName,password,id,captcha)
-                .catch { e ->
-                    loginStateFlow.value = State.Failure(e)
-                    Log.e("catch", "${e.localizedMessage}")
-                }.collect { data ->
 
-                    loginStateFlow.value = State.Success(data)
-                    Log.e("coll", "${"ggg"}")
-                }
-        }
 
-        return loginStateFlow.value
-
+    fun login2(userName:String,password:String,uuid:String,answer:String){
+        val login=Login(userName,password,uuid,answer)
+        loginRepository.login2(login,{loginResponse ->
+            Log.e("loginViewModel", loginResponse.toString())})
     }
+
+//    fun login(userName:String,password:String,id:String,captcha:String): State {
+//        viewModelScope.launch {
+//            loginStateFlow.value = State.Loading
+//            Log.e("before", "${loginStateFlow.value}")
+//            loginRepository.login(userName,password,id,captcha)
+//                .catch { e ->
+//                    loginStateFlow.value = State.Failure(e)
+//                    Log.e("catch", "${e.localizedMessage}")
+//                }.collect { data ->
+//
+//                    loginStateFlow.value = State.Success(data)
+//                    Log.e("coll", "${"ggg"}")
+//                }
+//        }
+//
+//        return loginStateFlow.value
+//
+//    }
 
 
     private fun isUserNameEmpty(username: String): Boolean {

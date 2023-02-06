@@ -23,10 +23,11 @@ class LoginRemoteDataSource @Inject constructor(private val api:AccountApiServic
 
 
 
-    suspend fun login(loginInfo: Login): LoginResponse =
-      api.login(loginInfo)
-
-
+    suspend fun login(loginInfo: Login): LoginResponse {
+       var d= api.login(loginInfo)
+        delay(1000)
+        return d
+    }
 
 
 

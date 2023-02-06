@@ -274,9 +274,9 @@ var isError by rememberSaveable{ mutableStateOf(false) }
                 color = PrimaryColor,
                 onClick = {
                     var s=loginViewModel.result.value!!.uuid
-                    loginViewModel.login("uat1","asdf@mc100",s,captcha)
+                    loginViewModel.login2("uat1","asdf@mc100",s,captcha)
                    var f=loginViewModel.checkOtp()
-                    Log.e("otp", "$f")
+                    Log.e("screen", "$captcha")
 
 
                 }
